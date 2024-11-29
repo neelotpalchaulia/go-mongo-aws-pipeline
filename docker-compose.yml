@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - "27017:27017"  # Exposing MongoDB on port 27017
+    volumes:
+      - ./mongo-data:/data/db  # Persist MongoDB data locally
+
+  app:
+    build:
+      context: .
+    container_name: go-app
+    ports:
+      - "8080:8080"  # Exposing Go app on port 8080
+    depends_on:
+      - mongodb  # Ensuring MongoDB starts before the Go app
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017  # MongoDB URI for Go app
